@@ -1,6 +1,6 @@
 import 'package:denote_pro/features/auth/controllers/auth_controller.dart';
 import 'package:denote_pro/features/auth/screens/login_screen.dart';
-import 'package:denote_pro/features/home/home_page.dart';
+import 'package:denote_pro/features/home/home_controller.dart';
 import 'package:denote_pro/firebase_options.dart';
 import 'package:denote_pro/models/user_model.dart';
 import 'package:denote_pro/theme/theme_colors.dart';
@@ -23,7 +23,7 @@ void main() async {
   );
 }
 
-final  scaffoldKey = GlobalKey<ScaffoldMessengerState>();
+final scaffoldKey = GlobalKey<ScaffoldMessengerState>();
 
 class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
