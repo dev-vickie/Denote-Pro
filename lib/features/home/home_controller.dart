@@ -1,9 +1,12 @@
+import 'package:denote_pro/features/classes_and_units/screens/view_all_units.dart';
 import 'package:denote_pro/features/home/screens/home.dart';
 import 'package:denote_pro/theme/theme_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rolling_bottom_bar/rolling_bottom_bar.dart';
 import 'package:rolling_bottom_bar/rolling_bottom_bar_item.dart';
+
+import 'screens/settings.dart';
 
 class Homepage extends ConsumerStatefulWidget {
   const Homepage({super.key});
@@ -28,12 +31,13 @@ class _HomepageState extends ConsumerState<Homepage> {
         controller: pageControlller,
         children: const <Widget>[
           Home(),
-          Center(child: Text("Notifs")),
-          Center(child: Text("settings")),
+          ViewAllUnits(),
+          SettingsPage(),
         ],
       ),
       extendBody: true,
       bottomNavigationBar: RollingBottomBar(
+        activeItemColor: AppTheme.whiteColor,
         itemColor: AppTheme.whiteColor,
         color: AppTheme.secondaryColor,
         controller: pageControlller,
@@ -47,7 +51,7 @@ class _HomepageState extends ConsumerState<Homepage> {
           RollingBottomBarItem(Icons.settings_rounded,
               label: 'Settings', activeColor: AppTheme.blueLight),
         ],
-        // enableIconRotation: true,
+        enableIconRotation: true,
         onTap: (index) {
           pageControlller.animateToPage(
             index,

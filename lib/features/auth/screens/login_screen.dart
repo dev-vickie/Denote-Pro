@@ -16,36 +16,51 @@ class LoginScreen extends ConsumerWidget {
     return Scaffold(
       body: isLoading
           ? const Loader()
-          : Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                const SizedBox(
-                  height: 30,
+          : Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    const Color.fromARGB(255, 9, 53, 121),
+                    Colors.blue[900]!,
+                    Colors.blue[300]!,
+                    Colors.blue[200]!,
+                  ],
                 ),
-                const Text(
-                  "Your all round student assistant",
-                  style: TextStyle(
-                    fontSize: 24,
-                    letterSpacing: 0.5,
-                    fontWeight: FontWeight.bold,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  const SizedBox(
+                    height: 30,
                   ),
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Lottie.asset(
-                    Constants.bulbLottie,
-                    height: 400,
+                  const Text(
+                    "Your all round student assistant",
+                    style: TextStyle(
+                      fontSize: 24,
+                      letterSpacing: 0.5,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-                const SizedBox(),
-                const SignInButton(),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.15,
-                )
-              ],
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Lottie.asset(
+                      Constants.bulbLottie,
+                      height: MediaQuery.of(context).size.height * 0.3,
+                    ),
+                  ),
+                  const SizedBox(),
+                  const SignInButton(),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.15,
+                  )
+                ],
+              ),
             ),
     );
   }

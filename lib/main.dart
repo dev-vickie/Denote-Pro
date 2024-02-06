@@ -1,3 +1,4 @@
+import 'package:denote_pro/core/common/loader.dart';
 import 'package:denote_pro/features/auth/controllers/auth_controller.dart';
 import 'package:denote_pro/features/auth/screens/login_screen.dart';
 import 'package:denote_pro/features/home/home_controller.dart';
@@ -8,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import 'core/common/error_page.dart';
 
@@ -60,7 +62,7 @@ class _MyAppState extends ConsumerState<MyApp> {
               }
               return const LoginScreen();
             },
-            loading: () => const CircularProgressIndicator(),
+            loading: () => const Loader(),
             error: (_, __) => const ErrorPage(),
           ),
     );
