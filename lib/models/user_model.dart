@@ -9,6 +9,7 @@ class UserModel {
   final String? email;
   final String? course;
   final String? year;
+  bool isAdmin = false;
 
   UserModel({
     required this.name,
@@ -18,6 +19,7 @@ class UserModel {
     required this.email,
     required this.course,
     required this.year,
+    this.isAdmin = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -29,6 +31,7 @@ class UserModel {
       'email': email,
       'course': course,
       'year': year,
+      'isAdmin': isAdmin,
     };
   }
 
@@ -41,13 +44,13 @@ class UserModel {
       email: map['email'] != null ? map['email'] as String : null,
       course: map['course'] != null ? map['course'] as String : null,
       year: map['year'] != null ? map['year'] as String : null,
+      isAdmin: map['isAdmin'] as bool,
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory UserModel.fromJson(String source) =>
-      UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory UserModel.fromJson(String source) => UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
   UserModel copyWith({
     String? name,
@@ -57,6 +60,7 @@ class UserModel {
     String? email,
     String? course,
     String? year,
+    bool? isAdmin,
   }) {
     return UserModel(
       name: name ?? this.name,
@@ -66,36 +70,7 @@ class UserModel {
       email: email ?? this.email,
       course: course ?? this.course,
       year: year ?? this.year,
+      isAdmin: isAdmin ?? this.isAdmin,
     );
-  }
-
-  @override
-  String toString() {
-    return 'UserModel(name: $name, uid: $uid, profilePic: $profilePic, isAuthenticated: $isAuthenticated, email: $email, course: $course, year: $year)';
-  }
-
-  @override
-  bool operator ==(covariant UserModel other) {
-    if (identical(this, other)) return true;
-  
-    return 
-      other.name == name &&
-      other.uid == uid &&
-      other.profilePic == profilePic &&
-      other.isAuthenticated == isAuthenticated &&
-      other.email == email &&
-      other.course == course &&
-      other.year == year;
-  }
-
-  @override
-  int get hashCode {
-    return name.hashCode ^
-      uid.hashCode ^
-      profilePic.hashCode ^
-      isAuthenticated.hashCode ^
-      email.hashCode ^
-      course.hashCode ^
-      year.hashCode;
   }
 }

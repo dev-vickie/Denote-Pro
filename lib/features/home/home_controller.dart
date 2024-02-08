@@ -45,11 +45,11 @@ class _HomepageState extends ConsumerState<Homepage> {
         useActiveColorByDefault: false,
         items: const [
           RollingBottomBarItem(Icons.home_rounded,
-              label: 'Home', activeColor: AppTheme.blueLight),
+              label: 'Home', activeColor: AppTheme.whiteColor),
           RollingBottomBarItem(Icons.library_books_outlined,
-              label: 'Units', activeColor: AppTheme.blueLight),
+              label: 'Units', activeColor: AppTheme.whiteColor),
           RollingBottomBarItem(Icons.settings_rounded,
-              label: 'Settings', activeColor: AppTheme.blueLight),
+              label: 'Settings', activeColor: AppTheme.whiteColor),
         ],
         enableIconRotation: true,
         onTap: (index) {
