@@ -1,13 +1,16 @@
 import 'package:denote_pro/features/classes_and_units/screens/pdf_view.dart';
 import 'package:denote_pro/models/book_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class BookTile extends StatelessWidget {
+import '../../controller/units_controller.dart';
+
+class BookTile extends ConsumerWidget {
   final Book book;
   const BookTile({super.key, required this.book});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: ListTile(
@@ -19,6 +22,36 @@ class BookTile extends StatelessWidget {
             ),
           ),
         ),
+        onLongPress: () {
+          //show a dialog to delete the book
+          showDialog(
+            context: context,
+            builder: (context) {
+              return AlertDialog(
+                title: const Text("Delete Book"),
+                content:
+                    const Text("Are you sure you want to delete this book?"),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text("No"),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      ref.read(unitsControllerProvider.notifier).deleteBook(
+                            book: book,
+                            context: context,
+                          );
+                    },
+                    child: const Text("Yes"),
+                  ),
+                ],
+              );
+            },
+          );
+        },
         tileColor: Colors.white,
         leading: const Image(
           image: AssetImage(

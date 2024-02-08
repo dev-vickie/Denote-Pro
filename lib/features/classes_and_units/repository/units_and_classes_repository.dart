@@ -9,7 +9,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 
 typedef FutureEither<T> = Future<Either<Failure, T>>;
-//provider
 final unitsAndClassesRepoProvider = Provider<UnitsAndClassesRepository>((ref) {
   return UnitsAndClassesRepository(
     firebaseFirestore: FirebaseFirestore.instance,
@@ -49,7 +48,6 @@ class UnitsAndClassesRepository {
     });
   }
 
-//function that saves the file to firebase storage,gets the link,then saves the link to firestore
   FutureEither<String> uploadPDFAndSaveDetails({
     required String uploadedBy,
     required UnitModel unit,
@@ -73,7 +71,6 @@ class UnitsAndClassesRepository {
         path: pdfUrl,
         addedBy: uploadedBy,
       );
-      //create a firestore reference for the book
       final bookRef = _firebaseFirestore.collection("books").doc();
       final newBook = book.copyWith(uid: bookRef.id);
       //add book to the unit's books array in firestore
@@ -97,5 +94,42 @@ class UnitsAndClassesRepository {
       final unit = UnitModel.fromMap(snapshot.data()!);
       return unit.books;
     });
+  }
+
+  //delete a book
+  FutureEither<String> deleteBook({required Book book,}) async {
+    try {
+      //delete the book from firebase storage
+      await _firebaseStorage.refFromURL(book.path).delete();
+      await _firebaseFirestore.collection("units").doc(book.unitId).update({
+        "books": FieldValue.arrayRemove([book.toMap()])
+      });
+      return right("Book deleted successfully");
+    } catch (e) {
+      return Left(Failure(e.toString()));
+    }
+  }
+
+  //delete a unit
+  FutureEither<String> deleteUnit({required UnitModel unit}) async {
+    try {
+      //delete all books in the unit
+      final books = await _firebaseFirestore
+          .collection("units")
+          .doc(unit.unitId)
+          .get()
+          .then((value) {
+        final unit = UnitModel.fromMap(value.data()!);
+        return unit.books;
+      });
+      for (final book in books) {
+        await _firebaseStorage.refFromURL(book.path).delete();
+      }
+      //delete the unit
+      await _firebaseFirestore.collection("units").doc(unit.unitId).delete();
+      return right("Unit deleted successfully");
+    } catch (e) {
+      return Left(Failure(e.toString()));
+    }
   }
 }

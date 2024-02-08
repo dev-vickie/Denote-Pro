@@ -90,4 +90,44 @@ class UnitsController extends StateNotifier<bool> {
   Stream<List<Book>> getFiles({required String unitId}) {
     return _unitsAndClassesRepository.getBooksInUnit(unitId: unitId);
   }
+
+  //delete a book
+  Future<void> deleteBook({
+    required Book book,
+    required BuildContext context,
+  }) async {
+    state = true;
+    final res = await _unitsAndClassesRepository.deleteBook(
+      book: book,
+    );
+    res.fold((l) {
+      state = false;
+      print(l);
+      showSnackBar(context, l.message);
+    }, (r) {
+      state = false;
+      Navigator.pop(context);
+      showSnackBar(context, "File deleted successfully");
+    });
+  }
+
+  //delete a unit
+  Future<void> deleteUnit({
+    required UnitModel unit,
+    required BuildContext context,
+  }) async {
+    state = true;
+    final res = await _unitsAndClassesRepository.deleteUnit(
+      unit: unit,
+    );
+    res.fold((l) {
+      state = false;
+      print(l);
+      showSnackBar(context, l.message);
+    }, (r) {
+      state = false;
+      Navigator.pop(context);
+      showSnackBar(context, "Unit deleted successfully");
+    });
+  }
 }

@@ -25,159 +25,162 @@ class _ViewUnitState extends ConsumerState<ViewUnit> {
   @override
   Widget build(BuildContext context) {
     final bool isUploadingPDF = ref.watch(unitsControllerProvider);
+    final user = ref.watch(userProvider)!;
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.unit.unitName),
-          actions: [
-            IconButton(
+      appBar: AppBar(
+        title: Text(widget.unit.unitName),
+        actions: [
+          IconButton(
+            onPressed: () {
+              //showModalBottomSheet
+              showModalBottomSheet(
+                isScrollControlled: true,
+                context: context,
+                builder: (context) {
+                  return Container(
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    width: MediaQuery.of(context).size.width,
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        const SizedBox(height: 20),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Unit Details",
+                            style: TextStyles.bold(20),
+                          ),
+                        ),
+                        //divider
+                        const Divider(
+                          color: AppTheme.greyColor,
+                          thickness: 1,
+                        ),
+
+                        RichText(
+                          text: TextSpan(
+                            text: "Unit: ",
+                            style: TextStyles.bold(20),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: widget.unit.unitName,
+                                style: TextStyles.normal(20).copyWith(
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        RichText(
+                          text: TextSpan(
+                            text: "Unit Code: ",
+                            style: TextStyles.bold(20),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: widget.unit.unitCode,
+                                style: TextStyles.normal(20).copyWith(
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        //lecturer
+                        RichText(
+                          text: TextSpan(
+                            text: "Lecturer: ",
+                            style: TextStyles.bold(20),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: widget.unit.lecturer,
+                                style: TextStyles.normal(20).copyWith(
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
+            icon: const Icon(Icons.more),
+          ),
+        ],
+      ),
+      body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: ref.watch(booksInAUnitStreamProvider(widget.unit.unitId)).when(
+                data: (books) {
+                  //if books is empty
+                  if (books.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "assets/icons/icempty.png",
+                            height: 100,
+                          ),
+                          const SizedBox(height: 20),
+                          Text(
+                            "No Books in this unit yet",
+                            style: TextStyles.bold(20),
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                      ),
+                    );
+                  }
+                  return ListView.builder(
+                    itemCount: books.length,
+                    itemBuilder: (context, index) {
+                      final book = books[index];
+                      return BookTile(book: book);
+                    },
+                  );
+                },
+                error: (error, stackTrace) {
+                  print("Error: $error");
+                  return const Center(
+                    child: Text(
+                      "Something went wrong while fetching books",
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  );
+                },
+                loading: () => const Loader(),
+              )),
+      floatingActionButton: user.isAdmin
+          ? FloatingActionButton(
               onPressed: () {
-                //showModalBottomSheet
+                //show Bottomsheet to add a book - no form inside the bottomsheet,just a plus icon which picks the pdf,then if the pdf is picked,display the name of the pdf and a button to upload the pdf
                 showModalBottomSheet(
                   isScrollControlled: true,
                   context: context,
                   builder: (context) {
-                    return Container(
-                      height: MediaQuery.of(context).size.height * 0.5,
-                      width: MediaQuery.of(context).size.width,
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          const SizedBox(height: 20),
-                          Align(
-                            alignment: Alignment.center,
-                            child: Text(
-                              "Unit Details",
-                              style: TextStyles.bold(20),
-                            ),
-                          ),
-                          //divider
-                          const Divider(
-                            color: AppTheme.greyColor,
-                            thickness: 1,
-                          ),
-
-                          RichText(
-                            text: TextSpan(
-                              text: "Unit: ",
-                              style: TextStyles.bold(20),
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: widget.unit.unitName,
-                                  style: TextStyles.normal(20).copyWith(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          RichText(
-                            text: TextSpan(
-                              text: "Unit Code: ",
-                              style: TextStyles.bold(20),
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: widget.unit.unitCode,
-                                  style: TextStyles.normal(20).copyWith(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          //lecturer
-                          RichText(
-                            text: TextSpan(
-                              text: "Lecturer: ",
-                              style: TextStyles.bold(20),
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: widget.unit.lecturer,
-                                  style: TextStyles.normal(20).copyWith(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                    return AddBookToUnitBottomSheet(
+                      unit: widget.unit,
+                      selectedFile: selectedFile,
+                      onFileSelected: (file) {
+                        setState(() {
+                          selectedFile = file;
+                        });
+                      },
                     );
                   },
                 );
               },
-              icon: const Icon(Icons.more),
-            ),
-          ],
-        ),
-        body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child:
-                ref.watch(booksInAUnitStreamProvider(widget.unit.unitId)).when(
-                      data: (books) {
-                        //if books is empty
-                        if (books.isEmpty) {
-                          return Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  "assets/icons/icempty.png",
-                                  height: 100,
-                                ),
-                                const SizedBox(height: 20),
-                                Text(
-                                  "No Books in this unit yet",
-                                  style: TextStyles.bold(20),
-                                ),
-                                const SizedBox(height: 20),
-                              ],
-                            ),
-                          );
-                        }
-                        return ListView.builder(
-                          itemCount: books.length,
-                          itemBuilder: (context, index) {
-                            final book = books[index];
-                            return BookTile(book: book);
-                          },
-                        );
-                      },
-                      error: (error, stackTrace) {
-                        print("Error: $error");
-                        return const Center(
-                          child: Text(
-                            "Something went wrong while fetching books",
-                            style: TextStyle(color: Colors.red),
-                          ),
-                        );
-                      },
-                      loading: () => const Loader(),
-                    )),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            //show Bottomsheet to add a book - no form inside the bottomsheet,just a plus icon which picks the pdf,then if the pdf is picked,display the name of the pdf and a button to upload the pdf
-            showModalBottomSheet(
-              isScrollControlled: true,
-              context: context,
-              builder: (context) {
-                return AddBookToUnitBottomSheet(
-                  unit: widget.unit,
-                  selectedFile: selectedFile,
-                  onFileSelected: (file) {
-                    setState(() {
-                      selectedFile = file;
-                    });
-                  },
-                );
-              },
-            );
-          },
-          child: const Icon(Icons.add),
-        ));
+              child: const Icon(Icons.add),
+            )
+          : const SizedBox.shrink(),
+    );
   }
 }
 
@@ -265,38 +268,37 @@ class AddBookToUnitBottomSheet extends ConsumerWidget {
           //upload button
           isUploadingPDF
               ? const Loader()
-              :
-          ElevatedButton(
-            onPressed: () {
-              if (selectedFile != null) {
-                ref
-                    .read(unitsControllerProvider.notifier)
-                    .uploadPDFAndSaveDetails(
-                      uploadedBy: ref.watch(userProvider)!.name,
-                      unit: unit,
-                      pdfFile: selectedFile!,
-                      context: context,
-                    );
-              } else {
-                ref
-                    .read(errorProvider.notifier)
-                    .update((state) => "Please Pick a file");
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              minimumSize: const Size(double.infinity, 50),
-              backgroundColor: AppTheme.primaryColor,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            child:  Text(
+              : ElevatedButton(
+                  onPressed: () {
+                    if (selectedFile != null) {
+                      ref
+                          .read(unitsControllerProvider.notifier)
+                          .uploadPDFAndSaveDetails(
+                            uploadedBy: ref.watch(userProvider)!.name,
+                            unit: unit,
+                            pdfFile: selectedFile!,
+                            context: context,
+                          );
+                    } else {
+                      ref
+                          .read(errorProvider.notifier)
+                          .update((state) => "Please Pick a file");
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(double.infinity, 50),
+                    backgroundColor: AppTheme.primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Text(
                     "Upload PDF",
                     style: TextStyles.normal(20).copyWith(
                       color: Colors.white,
                     ),
                   ),
-          ),
+                ),
         ],
       ),
     );

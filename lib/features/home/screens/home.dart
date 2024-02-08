@@ -1,9 +1,7 @@
 import 'package:denote_pro/core/common/loader.dart';
 import 'package:denote_pro/features/classes_and_units/controller/units_controller.dart';
 import 'package:denote_pro/features/classes_and_units/screens/add_unit_screen.dart';
-import 'package:denote_pro/features/classes_and_units/screens/view_all_units.dart';
 import 'package:denote_pro/features/home/widgets/home_unit_tile.dart';
-import 'package:denote_pro/models/unit_model.dart';
 import 'package:denote_pro/theme/textstyles.dart';
 import 'package:denote_pro/theme/theme_colors.dart';
 import 'package:flutter/material.dart';
@@ -54,16 +52,10 @@ class _HomeState extends ConsumerState<Home> {
                     style: TextStyles.bold(25),
                   ),
                   const Spacer(),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const AddUnit()));
-                    },
-                    child: CircleAvatar(
-                      radius: 25,
-                      backgroundColor: Colors.grey,
-                      backgroundImage: NetworkImage(user.profilePic),
-                    ),
+                  CircleAvatar(
+                    radius: 25,
+                    backgroundColor: Colors.grey,
+                    backgroundImage: NetworkImage(user.profilePic),
                   )
                 ],
               ),
