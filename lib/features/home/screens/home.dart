@@ -62,7 +62,7 @@ class _HomeState extends ConsumerState<Home> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: Container(
-                  height: 150,
+                  height: 170,
                   width: MediaQuery.of(context).size.width,
                   decoration: const BoxDecoration(
                     color: Colors.grey,
@@ -112,7 +112,7 @@ class _HomeState extends ConsumerState<Home> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    "Select Class",
+                                    "View All Notifications",
                                     style: TextStyles.normal(16).copyWith(
                                       color: AppTheme.primaryColor,
                                     ),
@@ -162,9 +162,12 @@ class _HomeState extends ConsumerState<Home> {
                           ],
                         );
                       }
+                      //sort the units by number of books in them,show the first 5 units if there are more than 5
+                      units.sort(
+                          (a, b) => b.books.length.compareTo(a.books.length));
                       return Column(
                         children: units
-                            .sublist(0, units.length > 4 ? 4 : units.length)
+                            .sublist(0, units.length > 5 ? 5 : units.length)
                             .map((unit) => HomeUnitTile(unit: unit))
                             .toList(),
                       );
