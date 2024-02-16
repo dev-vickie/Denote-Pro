@@ -24,7 +24,6 @@ class _ViewUnitState extends ConsumerState<ViewUnit> {
 
   @override
   Widget build(BuildContext context) {
-    final bool isUploadingPDF = ref.watch(unitsControllerProvider);
     final user = ref.watch(userProvider)!;
     return Scaffold(
       appBar: AppBar(
@@ -147,7 +146,7 @@ class _ViewUnitState extends ConsumerState<ViewUnit> {
                   );
                 },
                 error: (error, stackTrace) {
-                  print("Error: $error");
+                  debugPrint("Error: $error");
                   return const Center(
                     child: Text(
                       "Something went wrong while fetching books",
